@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.fhtiger.utils</groupId>
     <artifactId>web.utils</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-RELEASE</version>
     <name>web.utils</name>
     <description>Useful Utilities For Web Project</description>
     <licenses>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
-            <version>${freemarker.version</version>
+            <version>${freemarker.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
         <dependency>
