@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.EmailAssistant;
+package com.fhtiger.utils.web.emailassistant;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

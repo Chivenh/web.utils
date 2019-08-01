@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.MsgAssistant.MsgDefine;
+package com.fhtiger.utils.web.msgassistant.MsgDefine;
 
 /**
  * 发送的消息实体主接口

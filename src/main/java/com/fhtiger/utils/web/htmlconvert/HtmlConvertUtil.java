@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.HtmlConvert;
+package com.fhtiger.utils.web.htmlconvert;
 
 import com.fhtiger.utils.web.ExistsResult;
 import freemarker.core.ParseException;

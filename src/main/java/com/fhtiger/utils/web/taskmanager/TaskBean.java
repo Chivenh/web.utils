@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.TaskManager;
+package com.fhtiger.utils.web.taskmanager;
 
 import java.io.Serializable;
 import java.util.Map;

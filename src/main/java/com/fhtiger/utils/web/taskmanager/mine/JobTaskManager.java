@@ -1,7 +1,7 @@
-package com.fhtiger.utils.web.TaskManager.mine;
+package com.fhtiger.utils.web.taskmanager.mine;
 
-import com.fhtiger.utils.web.TaskManager.JobExecuteModel;
-import com.fhtiger.utils.web.TaskManager.SimpleTaskManager;
+import com.fhtiger.utils.web.taskmanager.JobExecuteModel;
+import com.fhtiger.utils.web.taskmanager.SimpleTaskManager;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
 
