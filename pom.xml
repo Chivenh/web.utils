@@ -5,6 +5,7 @@
     <version>0.0.1-RELEASE</version>
     <name>web.utils</name>
     <description>Useful Utilities For Web Project</description>
+    <url>https://github.com/ghostFlyTiger/web.utils</url>
     <licenses>
         <license>
             <name>MIT License</name>
