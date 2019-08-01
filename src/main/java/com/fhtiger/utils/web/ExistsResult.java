@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
  * 返回简单的存在性的值
  *
  * @author LFH
- * @date 2018年09月28日 15:50
+ * @since 2018年09月28日 15:50
  */
 public class ExistsResult<T> {
 	private boolean exists;

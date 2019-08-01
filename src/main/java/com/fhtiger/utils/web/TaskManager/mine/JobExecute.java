@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  * 任务执行代理(默认实现)
  *
  * @author LFH
- * @date 2018年10月12日 10:02
+ * @since 2018年10月12日 10:02
  */
 public class JobExecute extends JobExecuteModel {
 
@@ -26,7 +26,7 @@ public class JobExecute extends JobExecuteModel {
 			Object[] objects=(Object[]) jobDataMap.get(JOB_TRIGGER_PARAM);
 			method.invoke(classzz.newInstance(), objects);
 		} catch (IllegalAccessException|InvocationTargetException|InstantiationException e) {
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 	}
 }

@@ -9,7 +9,7 @@ import org.quartz.impl.StdSchedulerFactory;
  * 创建任务管理器bean,以方便注入使用.
  *
  * @author LFH
- * @date 2018年10月12日 10:34
+ * @since 2018年10月12日 10:34
  */
 public final class JobTaskManager implements SimpleTaskManager {
 

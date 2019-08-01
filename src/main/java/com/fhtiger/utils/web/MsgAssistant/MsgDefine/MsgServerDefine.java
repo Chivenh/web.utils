@@ -1,7 +1,11 @@
 package com.fhtiger.utils.web.MsgAssistant.MsgDefine;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,36 +13,52 @@ import java.util.regex.Pattern;
  *Msg 短信平台接口定义主接口
  *
  * @author LFH
- * @date 2018年10月29日 16:42
+ * @since 2018年10月29日 16:42
+ * @param <R> {@link MsgSendResponseDefine}
+ * @param <M> {@link MsgPublishDefine}
  */
 public interface MsgServerDefine<R extends MsgSendResponseDefine,M extends MsgPublishDefine> {
+
+	 static Logger logger= LogManager.getLogger(MsgServerDefine.class);
+
 	/**
 	 * 返回初始uri;
-	 * @return
+	 * @return String
 	 */
 	String buildUri();
 
 	/**
 	 * 发送消息并返回内容
-	 * @param msg
-	 * @return
+	 * @param msg {@link MsgPublishDefine}
+	 * @return {@link MsgSendResponseDefine}
 	 */
 	R  publish(M msg);
 
-
 	/**
-	 *  checkPhone 验证手机号码是否合法
-	 * @param str 需要验证的手机号码
-	 *            大陆手机号码11位数，匹配格式：前三位固定格式+后8位任意数
-	 *            此方法中前三位格式有：
-	 *            13+任意数
-	 *            15+除4的任意数
-	 *            18+除1和4的任意数
-	 *            17+除9的任意数
-	 *            147
+	 * 不校验香港手机号码
+	 * @param str 手机号码
 	 * @return boolean
 	 */
 	 static boolean checkPhone(String str) {
+		return checkPhone(str,false);
+	}
+
+	/**
+	 *  <p>验证手机号码是否合法</p>
+	 *  <pre>
+	 * 大陆手机号码11位数，匹配格式：前三位固定格式+后8位任意数
+	 * 	  此方法中前三位格式有：
+	 * 	 13+任意数
+	 * 	 15+除4的任意数
+	 * 	 18+除1和4的任意数
+	 * 	 17+除9的任意数
+	 * 	 147
+	 *  </pre>
+	 * @param str 需要验证的手机号码
+	 * @param hkCheck 是否校验香港手机号码
+	 * @return boolean
+	 */
+	static boolean checkPhone(String str,boolean hkCheck){
 		if (str == null) {
 			return false;
 		}
@@ -46,15 +66,13 @@ public interface MsgServerDefine<R extends MsgSendResponseDefine,M extends MsgPu
 		Pattern p = Pattern.compile(regExp);
 		Matcher m = p.matcher(str);
 		boolean bool = m.matches();
-		// 验证香港手机号码，暂时屏蔽
-		/*
-		 * if(!bool){
-		 * regExp = "^(5|6|8|9)\\d{7}$";
-		 * p = Pattern.compile(regExp);
-		 * m = p.matcher(str);
-		 * bool = m.matches();
-		 * }
-		 */
+		// 验证香港手机号码
+		 if(!bool&&hkCheck){
+		 regExp = "^[5689]\\d{7}$";
+		 p = Pattern.compile(regExp);
+		 m = p.matcher(str);
+		 bool = m.matches();
+		 }
 		return bool;
 	}
 
@@ -71,8 +89,8 @@ public interface MsgServerDefine<R extends MsgSendResponseDefine,M extends MsgPu
 
 	/**
 	 * 转换返回值类型为UTF-8格式.
-	 * @param is
-	 * @return
+	 * @param is 返回流
+	 * @return String
 	 */
 
 	 static String responseToString(InputStream is) {
@@ -87,7 +105,7 @@ public interface MsgServerDefine<R extends MsgSendResponseDefine,M extends MsgPu
 
 			while ((size = is.read(bytes)) > 0) {
 
-				String str = new String(bytes, 0, size, "UTF-8");
+				String str = new String(bytes, 0, size, StandardCharsets.UTF_8);
 
 				sb1.append(str);
 
@@ -95,7 +113,7 @@ public interface MsgServerDefine<R extends MsgSendResponseDefine,M extends MsgPu
 
 		} catch (IOException e) {
 
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 
 		} finally {
 
@@ -105,7 +123,7 @@ public interface MsgServerDefine<R extends MsgSendResponseDefine,M extends MsgPu
 
 			} catch (IOException e) {
 
-				e.printStackTrace();
+				logger.error("error:{0}",e);
 
 			}
 

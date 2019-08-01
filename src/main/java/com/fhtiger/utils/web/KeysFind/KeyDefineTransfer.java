@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * 关键字处理工具
  *
  * @author LFH
- * @date 2018年10月15日 11:09
+ * @since 2018年10月15日 11:09
  */
 public final class KeyDefineTransfer {
 	private Map<Character, Set<KeyDefine>> keys;

@@ -2,12 +2,14 @@ package com.fhtiger.utils.web.KeysFind;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
- * ...
+ * 关键字-校验对象
+ * @see KeyDefineTransfer#KeyDefineTransfer(Set)
  *
  * @author LFH
- * @date 2018年10月15日 10:45
+ * @since 2018年10月15日 10:45
  */
 public final class KeyDefine {
 	private @NotNull Character key;//关键字

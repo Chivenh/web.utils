@@ -1,6 +1,7 @@
 package com.fhtiger.utils.web.TaskManager.mine;
 
 import com.fhtiger.utils.web.TaskManager.JobExecuteModel;
+import com.fhtiger.utils.web.TaskManager.JobOpts;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
@@ -9,14 +10,14 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * ...
+ * 实现注入spring bean,执行bean对应方法的执行器
  *
  * @author LFH
- * @date 2018年10月12日 13:50
+ * @since 2018年10月12日 13:50
  */
 public final class JobExecuteWithBean extends JobExecuteModel {
 
-	public static String needBean="need_bean";
+	public static final String needBean="need_bean";
 
 	@Override
 	public void execute(JobExecutionContext context) {
@@ -30,11 +31,11 @@ public final class JobExecuteWithBean extends JobExecuteModel {
 			Map<String,Object> addons=jobOpts.getAddons();
 			method.invoke(addons.get(needBean), objects);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 			try {
 				context.getScheduler().deleteJob(new JobKey(jobName,groupName));
 			} catch (SchedulerException e1) {
-				e1.printStackTrace();
+				logger.error("error:{0}",e1);
 			}
 		}
 	}
