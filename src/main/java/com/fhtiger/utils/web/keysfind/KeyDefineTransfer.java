@@ -63,6 +63,7 @@ public final class KeyDefineTransfer {
 	 * @param content 原始文本
 	 * @param replaceMent 替换字符(即:将关键字以替换字符替换)
 	 * @param formatter 格式化对象
+	 * @return {@link KeyFilterResult}
 	 */
 	private KeyFilterResult filterDeal(String content,Character replaceMent,KeyFormatter formatter){
 		long start= System.currentTimeMillis();
@@ -139,6 +140,7 @@ public final class KeyDefineTransfer {
 	/**
 	 * 检索文本处理敏感词
 	 * @param content 原始文本
+	 * @return {@link KeyFilterResult}
 	 */
 	public KeyFilterResult filterDeal(String content){
 		return filterDeal(content,null,null);
@@ -148,6 +150,7 @@ public final class KeyDefineTransfer {
 	 * 检索文本处理敏感词
 	 * @param content   原始文本
 	 * @param replaceMent 替换字符(即:将关键字以替换字符替换)
+	 * @return {@link KeyFilterResult}
 	 */
 	public KeyFilterResult filterDeal(String content,char replaceMent){
 		return filterDeal(content,replaceMent,null);
@@ -157,6 +160,7 @@ public final class KeyDefineTransfer {
 	 * 检索文本处理敏感词
 	 * @param content   原始文本
 	 * @param formatter 格式化对象(将检索到的敏感词处理成想要的格式,方便提示)
+	 * @return {@link KeyFilterResult}
 	 */
 	public KeyFilterResult filterDeal(String content,KeyFormatter formatter){
 		return filterDeal(content,null,formatter);
