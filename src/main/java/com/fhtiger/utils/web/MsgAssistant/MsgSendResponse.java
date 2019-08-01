@@ -9,7 +9,7 @@ import java.util.Date;
  * 消息返回响应
  *
  * @author LFH
- * @date 2018年10月29日 16:53
+ * @since 2018年10月29日 16:53
  */
 public final class MsgSendResponse extends MsgSendResponseDefine {
 	private String content;
@@ -28,8 +28,8 @@ public final class MsgSendResponse extends MsgSendResponseDefine {
 	}
 
 	/**
-	 * @param state
-	 * @return
+	 * @param state 状态值
+	 * @return {@link MsgSendResponse}
 	 */
 	public static MsgSendResponse write(int state){
 		return new MsgSendResponse(state,null,null);
@@ -37,24 +37,30 @@ public final class MsgSendResponse extends MsgSendResponseDefine {
 
 
 	/**
-	 * @param state
-	 * @param mobile
-	 * @return
+	 * @param state  状态值
+	 * @param mobile 手机号
+	 * @return {@link MsgSendResponse}
 	 */
 	public static MsgSendResponse write(int state,String mobile){
 		return new MsgSendResponse(state,mobile,null);
 	}
 
 	/**
-	 * @param state
-	 * @param mobile
-	 * @param msg
-	 * @return
+	 * @param state  状态值
+	 * @param mobile   手机号
+	 * @param msg 状态消息
+	 * @return {@link MsgSendResponse}
 	 */
 	public static MsgSendResponse write(int state,String mobile,String msg){
 		return new MsgSendResponse(state,mobile,msg);
 	}
 
+	/**
+	 * @param content 消息内容
+	 * @param count 消息计数
+	 * @param sendDate 发送日期
+	 * @return {@link MsgSendResponse}
+	 */
 	public MsgSendResponse withSendInfo(String content, int count, Date sendDate){
 		this.content=content;
 		this.count=count;

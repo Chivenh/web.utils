@@ -3,6 +3,8 @@ package com.fhtiger.utils.web.HtmlConvert;
 import com.fhtiger.utils.web.ExistsResult;
 import freemarker.core.ParseException;
 import freemarker.template.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Map;
@@ -11,9 +13,12 @@ import java.util.Map;
  * 使用模板生成html文件的工具
  *
  * @author LFH
- * @date 2018年09月26日 22:37
+ * @since 2018年09月26日 22:37
  */
 public class HtmlConvertUtil {
+
+	private Logger logger= LogManager.getLogger(this.getClass());
+
 	private String basePath="";
 	private String suffix=".html";
 	private String templateSuffix=".ftl";
@@ -63,11 +68,12 @@ public class HtmlConvertUtil {
 	}
 
 	/**
+	 * 按模板生成文件
 	 * @param name 模板名称(不带后缀)
 	 * @param fileName 文件名称(不带后缀)
 	 * @param data 附加数据
 	 * @param after  添加后续操作
-	 * @return
+	 * @return boolean
 	 */
 	public boolean process(String name,String fileName, Map<String,Object> data, HtmlConvertAfter after){
 		boolean b=false;
@@ -83,14 +89,10 @@ public class HtmlConvertUtil {
 				after.work(html);
 			}
 			b=true;
-		} catch (MalformedTemplateNameException e) {
-			e.printStackTrace();
-		} catch (ParseException|TemplateException e) {
-			e.printStackTrace();
-		} catch (TemplateNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (MalformedTemplateNameException|ParseException|TemplateException|TemplateNotFoundException e) {
+			logger.error("error:{0}",e);
+		}catch (IOException e){
+			logger.error("io.error:{0}",e);
 		}
 		return b;
 	}
@@ -98,24 +100,36 @@ public class HtmlConvertUtil {
 	/**
 	 * @param name 模板名称(不带后缀),同时文件名默认使用模板名称
 	 * @param data 附加数据
-	 * @return
+	 * @return boolean
 	 */
 	public boolean process(String name, Map<String,Object> data){
 		return process(name,name,data,null);
 	}
 
+	/**
+	 * @param name 模板名称(不带后缀),同时文件名默认使用模板名称
+	 * @param data 附加数据
+	 * @param after {@link HtmlConvertAfter} 文件生成后操作
+	 * @return boolean
+	 */
 	public boolean process(String name, Map<String,Object> data, HtmlConvertAfter after){
 		return process(name,name,data,after);
 	}
 
+	/**
+	 * @param name 模板名称(不带后缀)
+	 * @param fileName 生成文件名
+	 * @param data 附加数据
+	 * @return boolean
+	 */
 	public boolean process(String name,String fileName, Map<String,Object> data){
 		return process(name,fileName,data,null);
 	}
 
 	/**
 	 * 判断静态文件是否已存在
-	 * @param name
-	 * @return
+	 * @param name 文件名
+	 * @return {@link ExistsResult}
 	 */
 	public ExistsResult<File> isExists(String name){
 		File file=new File(this.basePath+name+this.suffix);
@@ -124,8 +138,8 @@ public class HtmlConvertUtil {
 
 	/**
 	 * 获取存在的静态文件
-	 * @param name
-	 * @return
+	 * @param name 文件名
+	 * @return {@link File}
 	 */
 	public File getExistsFile(String name){
 		File file=new File(this.basePath+name+this.suffix);

@@ -7,7 +7,7 @@ import java.util.List;
  * 邮件实体
  *
  * @author LFH
- * @date 2018年10月31日 11:53
+ * @since 2018年10月31日 11:53
  */
 public final class EmailBody {
 	/*邮件标题*/
@@ -15,17 +15,17 @@ public final class EmailBody {
 	/*邮件正文*/
 	private @NotNull String htmlContent;
 	/*邮件接收人集合*/
-	private @NotNull List<String> recivers;
+	private @NotNull List<String> receivers;
 	/*抄送人集合*/
 	private List<String> ccEmails;
 	/*附件路径集合*/
 	private List<String> paths;
 
-	private EmailBody(String subject, String htmlContent, List<String> recivers, List<String> ccEmails,
+	private EmailBody(String subject, String htmlContent, List<String> receivers, List<String> ccEmails,
 			List<String> paths) {
 		this.subject = subject;
 		this.htmlContent = htmlContent;
-		this.recivers = recivers;
+		this.receivers = receivers;
 		this.ccEmails = ccEmails;
 		this.paths = paths;
 	}
@@ -52,8 +52,8 @@ public final class EmailBody {
 		return htmlContent;
 	}
 
-	public List<String> getRecivers() {
-		return recivers;
+	public List<String> getReceivers() {
+		return receivers;
 	}
 
 	public List<String> getCcEmails() {

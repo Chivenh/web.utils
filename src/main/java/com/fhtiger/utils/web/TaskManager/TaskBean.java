@@ -7,7 +7,7 @@ import java.util.Map;
  * Task 项级类
  *
  * @author LFH
- * @date 2018年10月12日 09:46
+ * @since 2018年10月12日 09:46
  */
 public final class TaskBean<T extends Serializable> implements Serializable{
 

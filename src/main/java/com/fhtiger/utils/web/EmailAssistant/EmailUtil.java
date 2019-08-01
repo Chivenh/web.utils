@@ -1,22 +1,19 @@
 package com.fhtiger.utils.web.EmailAssistant;
 
-import com.fhtiger.utils.Tutil;
+import com.fhtiger.utils.helperutils.util.Tutil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.mail.EmailAttachment;
-import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 import java.util.List;
 
 /**
- * 邮件发送Util
- * @version 1.2
- * @author zhang
- *
+ * 邮件发送工具类
+ * @version 0.0.1
+ * @author LFH
  */
 public final class EmailUtil {
 	// 邮箱服务器的登录用户名
@@ -33,17 +30,20 @@ public final class EmailUtil {
 	// 发送方姓名
 	private String fromUsername;
 	// 邮件内容编码，防止乱码
-	private static String CHARSET = "UTF-8";
+	private static final String CHARSET = "UTF-8";
 	// 默认邮箱服务器
-	private static String SMTPHOST_DEFAULT ="smtp.163.com";// "mail.csc-cq.com.cn";
+	private static final String SMTPHOST_DEFAULT ="smtp.163.com";// "mail.csc-cq.com.cn";
 
 	private Logger logger= LogManager.getLogger(this.getClass());
 
 	/**
 	 * 邮件发送前校验!
-	 * @return
+	 * @param receiverEmails 接收人邮箱地址
+	 * @param ccEmails 抄送人邮箱地址
+	 * @param bccEmails 密送人邮箱地址
+	 * @return {@link EmailCheck}
 	 */
-	private EmailCheck prepare(List<String> reciveEmils,List<String> ccEmails, List<String> bccEmails){
+	private EmailCheck prepare(List<String> receiverEmails,List<String> ccEmails, List<String> bccEmails){
 		// 简单校验
 		if (null == username || "".equals(username.trim())) {
 			return new EmailCheck( "用户名为空");
@@ -56,7 +56,7 @@ public final class EmailUtil {
 			return new EmailCheck("发件箱格式不对");
 		}
 
-		if (CollectionUtils.isEmpty(reciveEmils) && CollectionUtils.isEmpty(ccEmails)
+		if (CollectionUtils.isEmpty(receiverEmails) && CollectionUtils.isEmpty(ccEmails)
 				&& CollectionUtils.isEmpty(bccEmails)) {
 			return new EmailCheck("没有任何收件人、密送人、抄送人");
 		}
@@ -64,19 +64,13 @@ public final class EmailUtil {
 		return EmailCheck.PassCheck;
 	}
 
-
-
-
-
 	/**
 	 * 发送邮件(简单邮件,无附件,无抄送)
 	 * 
 	 * @param subject 邮件主题或标题
 	 * @param htmlContent 邮件内容html格式
 	 * @param reciveEmils 收件人
-	 * @throws EmailException
-	 * @throws MessagingException
-	 * @return
+	 * @return {@link EmailResponse}
 	 */
 	public EmailResponse sendEmail(String subject, String htmlContent, List<String> reciveEmils){
 		// 简单校验
@@ -84,9 +78,6 @@ public final class EmailUtil {
 		if(!check.isPass()){
 			return new EmailResponse( check.getMsg(),false);
 		}
-		//this.smtpHost = "smtp.163.com";
-		//this.smtpHost = "mail.csc-cq.com.cn";
-		// this.smtpHost="115.28.240.238";
 		return this.sendEmail(subject, htmlContent, reciveEmils, null, null, null);
 	}
 
@@ -97,7 +88,7 @@ public final class EmailUtil {
 	 * @param htmlContent 邮件内容html格式
 	 * @param reciveEmils 收件人
 	 * @param ccEmails    抄送方
-	 * @return
+	 * @return {@link EmailResponse}
 	 */
 	public EmailResponse sendEmailWithCopy(String subject, String htmlContent, List<String> reciveEmils, List<String> ccEmails){
 		// 简单校验
@@ -115,7 +106,7 @@ public final class EmailUtil {
 	 * @param htmlContent 邮件内容html格式
 	 * @param reciveEmils 收件人
 	 * @param paths     附件路径
-	 * @return
+	 * @return {@link EmailResponse}
 	 */
 	public EmailResponse sendEmailWithAttachment(String subject, String htmlContent, List<String> reciveEmils, List<String> paths){
 		// 简单校验
@@ -128,14 +119,44 @@ public final class EmailUtil {
 
 	/**
 	 * 发送邮件
-	 * 
+	 * <p>Examples</p>
+	 * <p><code>SimpleEmail email = new SimpleEmail();</code>//创建简单邮件,不可附件、HTML文本等</p>
+	 * <p><code>MultiPartEmail email = new MultiPartEmail();</code>//创建能加附件的邮件,可多个、网络附件亦可</p>
+	 * <p>ImageHtmlEmail HTML文本的邮件、通过2代码转转内联图片,网上都是官网上例子而官网上例子比较模糊</p>
+	 * <p><code>ImageHtmlEmail email=new ImageHtmlEmail();</code></p>
+	 * <p>特殊设置:</p>
+	 *  <code>
+	 *      email.setDebug(true);//是否开启调试默认不开启
+	 * 		email.setSSLOnConnect(true);//开启SSL加密
+	 * 		email.setStartTLSEnabled(true);//开启TLS加密
+	 * 	</code>
+	 * <pre>
+	 *email.setAuthentication("aaa","111111");//如果smtp服务器需要认证的话，在这里设置帐号、密码
+	 *
+	 *	  HtmlEmail、ImageHtmlEmail有setHtmlMsg()方法，且可以直接内联图片,可网上都搞那么复杂说不行如
+	 *	  //<img src='http://www.apache.org/images/asf_logo_wide.gif' />本人测试新浪、搜狐、QQ邮箱等都能显示
+	 *
+	 *	  //如果使用setMsg()传邮件内容，则HtmlEmail内嵌图片的方法
+	 *	  URL url = new URL("http://www.jianlimuban.com/图片");
+	 *	  String cid = email.embed(url, "名字");
+	 *	  email.setHtmlMsg("<img src='cid:"+cid+"' />");
+	 *
+	 * //这是ImageHtmlEmail的内嵌图片方法，我多次测试都不行，官网提供比较模糊，而大家都是用官网举的例子
+	 * // 内嵌图片,此处会抛出MessagingException, MalformedURLException异常
+	 *  URL url=new URL("http://www.apache.org");//定义你基本URL来解决相对资源的位置
+	 * email.setDataSourceResolver(new DataSourceUrlResolver(url));//这样HTML内容里如果有此路径下的图片会直接内联
+	 *
+	 * email.buildMimeMessage();//构建内容类型 ，
+	 *   //设置内容的字符集为UTF-8,先buildMimeMessage才能设置内容文本 ,但不能发送HTML格式的文本
+	 * email.getMimeMessage().setText("<font color='red'>测试简单邮件发送功能！</font>","UTF-8");
+	 * </pre>
 	 * @param subject 邮件主题或标题
 	 * @param htmlContent 邮件内容html格式
 	 * @param reciveEmils 收件人列表
 	 * @param ccEmails 抄送人列表
 	 * @param bccEmails 秘密抄送人列表
 	 * @param paths 文件路径
-	 * @return
+	 * @return {@link EmailResponse}
 	 */
 	private EmailResponse sendEmail( String subject, String htmlContent,
 			List<String> reciveEmils, List<String> ccEmails, List<String> bccEmails, List<String> paths) {
@@ -144,20 +165,9 @@ public final class EmailUtil {
 		try {
 			// 设置smtp host服务器
 			this.smtpHost = Tutil.getStr(this.smtpHost, SMTPHOST_DEFAULT) ;
-			// SimpleEmail email = new SimpleEmail();//创建简单邮件,不可附件、HTML文本等
-			// MultiPartEmail email = new MultiPartEmail();//创建能加附件的邮件,可多个、网络附件亦可
-			/*
-			 * ImageHtmlEmail:HTML文本的邮件、通过2代码转转内联图片
-			 * ImageHtmlEmail网上都是官网上例子而官网上例子比较模糊
-			 */
-			// ImageHtmlEmail email=new ImageHtmlEmail();
 
 			// 创建能加附件内容为HTML文本的邮件、HTML直接内联图片但必须用setHtmlMsg()传邮件内容
 			HtmlEmail email = new HtmlEmail();
-
-			// email.setDebug(true);//是否开启调试默认不开启
-			// email.setSSLOnConnect(true);//开启SSL加密
-			// email.setStartTLSEnabled(true);//开启TLS加密
 
 			email.setSmtpPort(this.smtpPort);
 
@@ -168,7 +178,7 @@ public final class EmailUtil {
 			email.setFrom(this.username, Tutil.getStr(this.fromUsername,this.username));// 设置发信的邮件帐号和发信人
 			// 添加收件人
 			if (null != reciveEmils) {
-				// 收件人也可以为空晒
+				// 收件人也可以为空
 				for (String reciver : reciveEmils) {
 					email.addTo(reciver, reciver);// 接收方邮箱和用户名
 				}
@@ -187,43 +197,20 @@ public final class EmailUtil {
 			}
 			email.setCharset(CHARSET);// 设置邮件的字符集为UTF-8防止乱码
 			email.setSubject(subject);// 主题
-			email.setHtmlMsg(htmlContent);// 邮件内容:<font color='red'>测试简单邮件发送功能！</font>
-			// email.setAuthentication("aaa","111111");//如果smtp服务器需要认证的话，在这里设置帐号、密码
-
-			/*
-			 * HtmlEmail、ImageHtmlEmail有setHtmlMsg()方法，且可以直接内联图片,可网上都搞那么复杂说不行如
-			 * <img src='http://www.apache.org/images/asf_logo_wide.gif' />本人测试新浪、搜狐、QQ邮箱等都能显示
-			 */
-			/*
-			 * //如果使用setMsg()传邮件内容，则HtmlEmail内嵌图片的方法
-			 * URL url = new URL("http://www.jianlimuban.com/图片");
-			 * String cid = email.embed(url, "名字");
-			 * email.setHtmlMsg("<img src='cid:"+cid+"' />");
-			 */
-
-			// 这是ImageHtmlEmail的内嵌图片方法，我多次测试都不行，官网提供比较模糊，而大家都是用官网举的例子
-			// 内嵌图片,此处会抛出MessagingException, MalformedURLException异常
-			// URL url=new URL("http://www.apache.org");//定义你基本URL来解决相对资源的位置
-			// email.setDataSourceResolver(new DataSourceUrlResolver(url));//这样HTML内容里如果有此路径下的图片会直接内联
+			email.setHtmlMsg(htmlContent);// 邮件内容
 
 			// 创建邮件附件可多个
 			if (null != paths && paths.size() > 0) {
 				for (String path : paths) {
 					EmailAttachment attachment = new EmailAttachment();
-					// path=new String(path.getBytes("GBK"), "UTF-8");
 					attachment.setPath(path);
 					path = path.substring(path.replaceAll("\\\\", "/").lastIndexOf("/") + 1, path.length());
-					// System.out.println(path);
 					attachment.setName(MimeUtility.encodeText(path));// 防止中文乱码
 					attachment.setDisposition(EmailAttachment.ATTACHMENT);
 					email.attach(attachment);// 添加附件到邮件,可添加多个
 				}
 			}
-			/*
-			 * email.buildMimeMessage();//构建内容类型 ，
-			 * //设置内容的字符集为UTF-8,先buildMimeMessage才能设置内容文本 ,但不能发送HTML格式的文本
-			 * email.getMimeMessage().setText("<font color='red'>测试简单邮件发送功能！</font>","UTF-8");
-			 */
+
 			email.send();// 发送邮件
 			flag="发送成功";
 			response.setMsg(flag);
@@ -233,10 +220,6 @@ public final class EmailUtil {
 			response.setMsg("邮件发送错误!");
 		}
 		return response;
-	}
-
-	public EmailUtil() {
-
 	}
 
 	/**
@@ -262,13 +245,11 @@ public final class EmailUtil {
 		this(username,username,password,SMTPHOST_DEFAULT);
 	}
 
-
-
 	/**
 	 * 初始化一个邮件发送者
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param username 用户名
+	 * @param password 密码
+	 * @return {@link EmailUtil}
 	 */
 	public static EmailUtil emailSender(String username, String password){
 		return new EmailUtil(username,password);
@@ -276,19 +257,32 @@ public final class EmailUtil {
 
 	/**
 	 * 初始化一个邮件发送者
-	 * @param username
-	 * @param password
-	 * @param smtpHost
-	 * @return
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param smtpHost smtpHost
+	 * @return {@link EmailUtil}
 	 */
 	public static EmailUtil emailSender(String username, String password,String smtpHost){
 		return new EmailUtil(username,password,smtpHost);
 	}
 
+	/**
+	 * 初始化一个邮件发送者
+	 * @param username 用户名
+	 * @param sign 签名
+	 * @param password 密码
+	 * @param smtpHost smtpHost
+	 * @return {@link EmailUtil}
+	 */
 	public static EmailUtil emailSender(String username,String sign, String password,String smtpHost){
 		return new EmailUtil(username,sign,password,smtpHost);
 	}
 
+	/**
+	 * 向邮件发送者附加设置请求端口号
+	 * @param smtpPort smtp请求端口号
+	 * @return {@link EmailUtil}
+	 */
 	public EmailUtil withSmtpPort(int smtpPort){
 		this.smtpPort=smtpPort;
 		return this;
@@ -306,11 +300,9 @@ public final class EmailUtil {
 		return smtpHost;
 	}
 
-
 	public String getFromEmail() {
 		return fromEmail;
 	}
-
 
 	public String getFromUsername() {
 		return fromUsername;
@@ -319,7 +311,7 @@ public final class EmailUtil {
 	/**
 	 * 邮件校验返回信息
 	 */
-	static class EmailCheck{
+	private static class EmailCheck{
 		private String msg;
 		private boolean pass;
 
@@ -334,11 +326,11 @@ public final class EmailUtil {
 			this.msg = msg;
 		}
 
-		public String getMsg() {
+		private String getMsg() {
 			return msg;
 		}
 
-		public boolean isPass() {
+		private boolean isPass() {
 			return pass;
 		}
 	}

@@ -13,7 +13,8 @@ public final class ClientExamineUtil {
 
 	/**
 	 * 获取用户代理对象
-	 * @return
+	 * @param userAgent 客户端标识
+	 * @return  {@link UserAgent}
 	 */
 	public static UserAgent getUserAgent(String userAgent){
 		return UserAgent.parseUserAgentString(userAgent);
@@ -21,7 +22,8 @@ public final class ClientExamineUtil {
 
 	/**
 	 * 获取设备类型
-	 * @return
+	 * @param userAgent 客户端标识
+	 * @return {@link DeviceType}
 	 */
 	public static DeviceType getDeviceType(String userAgent){
 		return getUserAgent(userAgent).getOperatingSystem().getDeviceType();
@@ -29,7 +31,8 @@ public final class ClientExamineUtil {
 
 	/**
 	 * 是否是PC
-	 * @return
+	 * @param userAgent 客店端标识
+	 * @return boolean
 	 */
 	public static boolean isPc(String userAgent){
 		return DeviceType.COMPUTER.equals(getDeviceType(userAgent));
@@ -37,7 +40,8 @@ public final class ClientExamineUtil {
 
 	/**
 	 * 是否是手机
-	 * @return
+	 * @param userAgent 客户端标识
+	 * @return boolean
 	 */
 	public static boolean isMobile(String userAgent){
 		return DeviceType.MOBILE.equals(getDeviceType(userAgent));
@@ -45,7 +49,8 @@ public final class ClientExamineUtil {
 
 	/**
 	 * 是否是平板
-	 * @return
+	 * @param userAgent 客户端标识
+	 * @return boolean
 	 */
 	public static boolean isTablet(String userAgent){
 		return DeviceType.TABLET.equals(getDeviceType(userAgent));
@@ -53,7 +58,8 @@ public final class ClientExamineUtil {
 
 	/**
 	 * 是否是手机和平板
-	 * @return
+	 * @param userAgent 客户端标识
+	 * @return boolean
 	 */
 	public static boolean isMobileOrTablet(String userAgent){
 		DeviceType deviceType = getDeviceType(userAgent);

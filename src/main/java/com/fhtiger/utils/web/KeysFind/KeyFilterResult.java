@@ -7,7 +7,7 @@ import java.util.List;
  *	过滤结果返回
  *
  * @author LFH
- * @date 2018年10月16日 09:43
+ * @since 2018年10月16日 09:43
  */
 public final class KeyFilterResult implements Serializable {
 	private static final long serialVersionUID = 1L;

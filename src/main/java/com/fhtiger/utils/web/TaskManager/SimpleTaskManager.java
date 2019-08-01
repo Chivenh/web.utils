@@ -1,5 +1,7 @@
 package com.fhtiger.utils.web.TaskManager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.*;
 
 import java.lang.reflect.Method;
@@ -12,29 +14,40 @@ import java.util.concurrent.ConcurrentHashMap;
  * 任务管理工具
  *
  * @author LFH
- * @date 2018年10月12日 10:11
+ * @since 2018年10月12日 10:11
  */
 public interface SimpleTaskManager {
+
+	Logger logger= LogManager.getLogger(SimpleTaskManager.class);
+
 	ConcurrentHashMap<String, TaskBean> allTask = new ConcurrentHashMap<>();
 
 	/**
 	 * 获取 SchedulerFactory
-	 * @return
+	 * @return {@link SchedulerFactory}
 	 */
 	SchedulerFactory getSchedulerFactoryBean();
 
 	/**
 	 * 获取任务代理类
-	 * @return
+	 * @return {@link JobExecuteModel}
 	 */
 	Class<? extends JobExecuteModel> getJobExcueteClass();
 
+	/**
+	 * 获取全部任务
+	 * @return 获取全部任务
+	 */
 	default List<TaskBean> getAllTask() {
-		List<TaskBean> list = new ArrayList();
-		list.addAll(allTask.values());
-		return list;
+		return new ArrayList<>(allTask.values());
 	}
 
+	/**
+	 * 获取对应名称的 CronTrigger
+	 * @param trigger trigger名称
+	 * @param group trigger分组名
+	 * @return {@link CronTrigger}
+	 */
 	default CronTrigger getTrigger(String trigger, String group) {
 		CronTrigger cronTrigger = null;
 		try {
@@ -42,11 +55,16 @@ public interface SimpleTaskManager {
 			cronTrigger = (CronTrigger) scheduler.getTrigger(new TriggerKey(
 					trigger, group));
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 		return cronTrigger;
 	}
 
+	/**
+	 * 添加任务
+	 * @param task {@link TaskBean} 任务
+	 * @return 返回添加成功的任务
+	 */
 	default TaskBean addTask(TaskBean task) {
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
@@ -80,11 +98,16 @@ public interface SimpleTaskManager {
 				allTask.put(task.getTaskId(), task);
 			}
 		} catch (SchedulerException|ClassNotFoundException|NoSuchMethodException|SecurityException e) {
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 		return task;
 	}
 
+	/**
+	 * 重启任务
+	 * @param task {@link TaskBean} 任务
+	 * @return 返回重启成功的任务
+	 */
 	default TaskBean reStartTask(TaskBean task) {
 		try {
 			CronTrigger cronTrigger = getTrigger(task.getTaskTrigger(),
@@ -104,49 +127,64 @@ public interface SimpleTaskManager {
 					new TriggerKey(task.getTaskTrigger(), task.getTaskGroup()),
 					cronTrigger);
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 
 		return task;
 	}
 
+	/**
+	 * 删除任务
+	 * @param task {@link TaskBean}
+	 * @return 返回删除的任务
+	 */
 	default TaskBean deleteTask(TaskBean task) {
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
 			JobKey jobKey = new JobKey(task.getTaskName(), task.getTaskGroup());
 			scheduler.deleteJob(jobKey);
 		} catch (SchedulerException e) {
-
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 		return task;
 	}
 
+	/**
+	 * 暂停任务
+	 * @param task {@link TaskBean}
+	 * @return 返回被暂停的任务
+	 */
 	default TaskBean pauseTask(TaskBean task) {
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
 			JobKey jobKey = new JobKey(task.getTaskName(), task.getTaskGroup());
 			scheduler.pauseJob(jobKey);
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 		return task;
 	}
 
+	/**
+	 * 恢复被暂停的任务
+	 * @param task {@link TaskBean}
+	 * @return 返回恢复的任务
+	 */
 	default TaskBean resumeTask(TaskBean task) {
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
 			JobKey jobKey = new JobKey(task.getTaskName(), task.getTaskGroup());
 			scheduler.resumeJob(jobKey);
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 		return task;
 	}
 
+	/**
+	 * 批量删除任务
+	 * @param scheduleTasks 要批量删除的任务
+	 */
 	default void deleteTasks(Collection<TaskBean> scheduleTasks) {
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
@@ -159,32 +197,39 @@ public interface SimpleTaskManager {
 			}
 			scheduler.deleteJobs(jobKeys);
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 	}
 
+	/**
+	 * 清除所有任务
+	 * @see #deleteTasks(Collection)
+	 */
 	default void clearAllTasks(){
 		deleteTasks(allTask.values());
 	}
 
+	/**
+	 * 暂停所有任务
+	 */
 	default void pauseAllTask() {
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
 			scheduler.pauseAll();
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 	}
 
+	/**
+	 * 恢复所有被暂停的任务
+	 */
 	default void resumeAllTask(){
 		try {
 			Scheduler scheduler = getSchedulerFactoryBean().getScheduler();
 			scheduler.resumeAll();
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("error:{0}",e);
 		}
 	}
 }

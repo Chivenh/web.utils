@@ -4,7 +4,7 @@ package com.fhtiger.utils.web.MsgAssistant.MsgDefine;
  * 消息返回格式预定义
  *
  * @author LFH
- * @date 2018年10月29日 17:39
+ * @since 2018年10月29日 17:39
  */
 public abstract class MsgSendResponseDefine {
 	protected int state;
