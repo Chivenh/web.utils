@@ -9,7 +9,7 @@
 </dependency>
 ```
 
-# com.fhtiger.utils.webutils
+# com.fhtiger.utils.web
 ## EmailAssistant
 ```java
     //EmailUtil 是真正用来构建并发送邮件的工具.
@@ -27,6 +27,10 @@
    
 ```
 ## HtmlConvert
+    wait...
 ## KeysFind
+    wait...
 ## MsgAssistant
+    wait...
 ## TaskManager
+    wait...
