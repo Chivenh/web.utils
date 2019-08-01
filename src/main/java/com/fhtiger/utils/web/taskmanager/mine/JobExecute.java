@@ -1,6 +1,6 @@
-package com.fhtiger.utils.web.TaskManager.mine;
+package com.fhtiger.utils.web.taskmanager.mine;
 
-import com.fhtiger.utils.web.TaskManager.JobExecuteModel;
+import com.fhtiger.utils.web.taskmanager.JobExecuteModel;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 

@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.EmailAssistant;
+package com.fhtiger.utils.web.emailassistant;
 
 import com.fhtiger.utils.helperutils.util.Tutil;
 import org.apache.commons.collections.CollectionUtils;

@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.MsgAssistant.MsgDefine;
+package com.fhtiger.utils.web.msgassistant.MsgDefine;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.MsgAssistant.MsgDefine;
+package com.fhtiger.utils.web.msgassistant.MsgDefine;
 
 /**
  * 消息返回格式预定义

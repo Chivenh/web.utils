@@ -1,7 +1,7 @@
-package com.fhtiger.utils.web.MsgAssistant;
+package com.fhtiger.utils.web.msgassistant;
 
 
-import com.fhtiger.utils.web.MsgAssistant.MsgDefine.MsgSendResponseDefine;
+import com.fhtiger.utils.web.msgassistant.MsgDefine.MsgSendResponseDefine;
 
 import java.util.Date;
 

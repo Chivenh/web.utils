@@ -1,7 +1,7 @@
-package com.fhtiger.utils.web.TaskManager.mine;
+package com.fhtiger.utils.web.taskmanager.mine;
 
-import com.fhtiger.utils.web.TaskManager.JobExecuteModel;
-import com.fhtiger.utils.web.TaskManager.JobOpts;
+import com.fhtiger.utils.web.taskmanager.JobExecuteModel;
+import com.fhtiger.utils.web.taskmanager.JobOpts;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;

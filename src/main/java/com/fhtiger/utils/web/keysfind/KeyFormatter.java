@@ -1,4 +1,4 @@
-package com.fhtiger.utils.web.KeysFind;
+package com.fhtiger.utils.web.keysfind;
 @FunctionalInterface
 public interface KeyFormatter {
 	/**
