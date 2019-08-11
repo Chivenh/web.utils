@@ -2,6 +2,7 @@ package com.fhtiger.utils.web.emailassistant;
 
 import com.fhtiger.utils.helperutils.util.Tutil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.mail.internet.MimeUtility;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 邮件发送工具类
@@ -73,11 +75,6 @@ public final class EmailUtil {
 	 * @return {@link EmailResponse}
 	 */
 	public EmailResponse sendEmail(String subject, String htmlContent, List<String> reciveEmils){
-		// 简单校验
-		EmailCheck check=this.prepare(reciveEmils,  null,  null);
-		if(!check.isPass()){
-			return new EmailResponse( check.getMsg(),false);
-		}
 		return this.sendEmail(subject, htmlContent, reciveEmils, null, null, null);
 	}
 
@@ -91,11 +88,6 @@ public final class EmailUtil {
 	 * @return {@link EmailResponse}
 	 */
 	public EmailResponse sendEmailWithCopy(String subject, String htmlContent, List<String> reciveEmils, List<String> ccEmails){
-		// 简单校验
-		EmailCheck check=this.prepare(reciveEmils,  ccEmails,  null);
-		if(!check.isPass()){
-			return new EmailResponse( check.getMsg(),false);
-		}
 		return this.sendEmail(subject, htmlContent, reciveEmils, ccEmails, null, null);
 	}
 
@@ -109,11 +101,6 @@ public final class EmailUtil {
 	 * @return {@link EmailResponse}
 	 */
 	public EmailResponse sendEmailWithAttachment(String subject, String htmlContent, List<String> reciveEmils, List<String> paths){
-		// 简单校验
-		EmailCheck check=this.prepare(reciveEmils,  null,  null);
-		if(!check.isPass()){
-			return new EmailResponse( check.getMsg(),false);
-		}
 		return this.sendEmail(subject, htmlContent, reciveEmils, null, null, paths);
 	}
 
@@ -156,10 +143,16 @@ public final class EmailUtil {
 	 * @param ccEmails 抄送人列表
 	 * @param bccEmails 秘密抄送人列表
 	 * @param paths 文件路径
+	 * @param headers   头信息
 	 * @return {@link EmailResponse}
 	 */
-	private EmailResponse sendEmail( String subject, String htmlContent,
-			List<String> reciveEmils, List<String> ccEmails, List<String> bccEmails, List<String> paths) {
+	public EmailResponse sendEmail( String subject, String htmlContent,
+			List<String> reciveEmils, List<String> ccEmails, List<String> bccEmails, List<String> paths, Map<String ,String> headers) {
+		// 简单校验
+		EmailCheck check=this.prepare(reciveEmils,  ccEmails,  bccEmails);
+		if(!check.isPass()){
+			return new EmailResponse( check.getMsg(),false);
+		}
 		String flag = "发送失败!";
 		EmailResponse response=new EmailResponse(flag,false);
 		try {
@@ -198,7 +191,6 @@ public final class EmailUtil {
 			email.setCharset(CHARSET);// 设置邮件的字符集为UTF-8防止乱码
 			email.setSubject(subject);// 主题
 			email.setHtmlMsg(htmlContent);// 邮件内容
-
 			// 创建邮件附件可多个
 			if (null != paths && paths.size() > 0) {
 				for (String path : paths) {
@@ -211,6 +203,10 @@ public final class EmailUtil {
 				}
 			}
 
+			if(MapUtils.isNotEmpty(headers)){
+				email.setHeaders(headers);
+			}
+
 			email.send();// 发送邮件
 			flag="发送成功";
 			response.setMsg(flag);
@@ -221,6 +217,13 @@ public final class EmailUtil {
 		}
 		return response;
 	}
+
+	public EmailResponse sendEmail( String subject, String htmlContent,
+			List<String> reciveEmils, List<String> ccEmails, List<String> bccEmails, List<String> paths){
+		return  this.sendEmail(subject,htmlContent,reciveEmils,ccEmails,bccEmails,paths,null);
+	}
+
+
 
 	/**
 	 * 邮件发送的构造器
