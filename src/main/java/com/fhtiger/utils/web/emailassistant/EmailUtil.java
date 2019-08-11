@@ -121,12 +121,12 @@ public final class EmailUtil {
 	 *email.setAuthentication("aaa","111111");//如果smtp服务器需要认证的话，在这里设置帐号、密码
 	 *
 	 *	  HtmlEmail、ImageHtmlEmail有setHtmlMsg()方法，且可以直接内联图片,可网上都搞那么复杂说不行如
-	 *	  //<img src='http://www.apache.org/images/asf_logo_wide.gif' />本人测试新浪、搜狐、QQ邮箱等都能显示
+	 *	  &lt;img src='http://www.apache.org/images/asf_logo_wide.gif' /&gt;本人测试新浪、搜狐、QQ邮箱等都能显示
 	 *
 	 *	  //如果使用setMsg()传邮件内容，则HtmlEmail内嵌图片的方法
 	 *	  URL url = new URL("http://www.jianlimuban.com/图片");
 	 *	  String cid = email.embed(url, "名字");
-	 *	  email.setHtmlMsg("<img src='cid:"+cid+"' />");
+	 *	  email.setHtmlMsg("&lt;img src='cid:"+cid+"' /&gt;");
 	 *
 	 * //这是ImageHtmlEmail的内嵌图片方法，我多次测试都不行，官网提供比较模糊，而大家都是用官网举的例子
 	 * // 内嵌图片,此处会抛出MessagingException, MalformedURLException异常
@@ -135,7 +135,7 @@ public final class EmailUtil {
 	 *
 	 * email.buildMimeMessage();//构建内容类型 ，
 	 *   //设置内容的字符集为UTF-8,先buildMimeMessage才能设置内容文本 ,但不能发送HTML格式的文本
-	 * email.getMimeMessage().setText("<font color='red'>测试简单邮件发送功能！</font>","UTF-8");
+	 * email.getMimeMessage().setText("&lt;font color='red'&gt;测试简单邮件发送功能！&lt;/font&gt;","UTF-8");
 	 * </pre>
 	 * @param subject 邮件主题或标题
 	 * @param htmlContent 邮件内容html格式
