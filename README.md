@@ -5,12 +5,12 @@
 <dependency>
     <groupId>com.fhtiger.utils</groupId>
     <artifactId>web.utils</artifactId>
-    <version>0.0.1-RELEASE</version>
+    <version>0.0.2-RELEASE</version>
 </dependency>
 ```
 
 # com.fhtiger.utils.web
-## EmailAssistant
+## emailassistant
 ```java
     //EmailUtil 是真正用来构建并发送邮件的工具.
     //1.使用 EmailUtil#emailSender 创建发送者对象
@@ -26,11 +26,22 @@
     }
    
 ```
-## HtmlConvert
+## filter
+    [ClearCacheFilter](./com/fhtiger/utils/web/filter/ClearCacheFilter.md)
+## htmlconvert
+```java
+    import com.fhtiger.utils.web.htmlconvert.*;
+    class Test{
+    	//HtmlConvertUtil htmlConvertUtil = new HtmlConvertUtil(configuration);
+    	HtmlConvertUtil htmlConvertUtil = new HtmlConvertUtil(basePath,configuration);
+        
+    	//使用HtmlConvertUtil#process方法来生成静态文件.
+    	
+    }
+```
+## keysfind
     wait...
-## KeysFind
+## msgassistant
     wait...
-## MsgAssistant
-    wait...
-## TaskManager
+## taskmanager
     wait...

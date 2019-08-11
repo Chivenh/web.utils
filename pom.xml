@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.fhtiger.utils</groupId>
     <artifactId>web.utils</artifactId>
-    <version>0.0.1-RELEASE</version>
+    <version>0.0.2-RELEASE</version>
     <name>web.utils</name>
     <description>Useful Utilities For Web Project</description>
     <url>https://github.com/ghostFlyTiger/web.utils</url>
