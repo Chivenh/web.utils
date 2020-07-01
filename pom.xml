@@ -36,7 +36,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.8</jdk.version>
-        <quartz-scheduler-job.version>2.3.0</quartz-scheduler-job.version>
+        <quartz-scheduler-job.version>2.3.2</quartz-scheduler-job.version>
         <common-eamil.version>1.5</common-eamil.version>
         <common-lang.version>2.5</common-lang.version>
         <common-collections.version>3.2.2</common-collections.version>
