@@ -41,7 +41,7 @@
         <common-lang.version>2.5</common-lang.version>
         <common-collections.version>3.2.2</common-collections.version>
         <common-io.version>2.2</common-io.version>
-        <log4j.version>2.7</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <freemarker.version>2.3.28</freemarker.version>
         <simple.helper.version>0.0.1-RELEASE</simple.helper.version>
     </properties>
